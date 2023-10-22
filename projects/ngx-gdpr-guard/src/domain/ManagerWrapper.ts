@@ -4,7 +4,7 @@ import {
 	GdprManager,
 	GdprManagerRaw,
 	GdprStorage,
-} from 'gdpr-guard';
+} from "gdpr-guard";
 import { WrappedGuard } from './WrappedGuard';
 import { WrappedGroup } from './WrappedGroup';
 import type { GdprManagerStream } from './GdprManagerStream';
@@ -25,8 +25,6 @@ export class ManagerWrapper extends GdprManager {
 		if (triggerChange) {
 			this.triggerChange();
 		}
-
-		this.manager = manager;
 
 		return oldManager || null;
 	}

@@ -1,44 +1,51 @@
-import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from "@angular/core";
 import {
 	GdprGuard,
 	GdprGuardGroup,
 	GdprManager,
+	GdprManagerEventHub,
 	GdprManagerFactory,
 	GdprManagerRaw,
 	GdprSavior,
-} from 'gdpr-guard';
-import { GdprManagerStream } from '../domain/GdprManagerStream';
-import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
-import deepEquals from 'fast-deep-equal';
-import { FailedToDiscard, FailedToSave } from '../domain/exceptions';
+} from "gdpr-guard";
+import { GdprManagerStream } from "../domain/GdprManagerStream";
+import { distinctUntilChanged, filter, map, Observable } from "rxjs";
+import deepEquals from "fast-deep-equal";
+import { FailedToDiscard, FailedToSave } from "../domain/exceptions";
 
 export const GDPR_MANAGER_FACTORY_TOKEN =
 	new InjectionToken<GdprManagerFactory>(
-		'ngx-gdpr-guard: NgxGdprGuardService#factory'
+		"ngx-gdpr-guard: NgxGdprGuardService#factory",
 	);
 
 export const GDPR_SAVIOR_TOKEN = new InjectionToken<GdprSavior>(
-	'ngx-gdpr-guard: NgxGdprGuardService#savior'
+	"ngx-gdpr-guard: NgxGdprGuardService#savior",
 );
 
 @Injectable({
-	providedIn: 'root',
+	providedIn: "root",
 })
 export class NgxGdprGuardService {
 	private _managerStream: GdprManagerStream;
 
 	/**
-	 * Observable that emits the raw representation of the manager on change
+	 * Observable that emits the raw representation of the manager (on change)
 	 */
 	public readonly manager$: Observable<GdprManagerRaw>;
 
+	/**
+	 * Observable that emits the event hub of the manager (on change)
+	 */
+	public readonly events$: Observable<GdprManagerEventHub>;
+
 	constructor(
 		@Inject(GDPR_MANAGER_FACTORY_TOKEN) factory: GdprManagerFactory,
-		@Inject(GDPR_SAVIOR_TOKEN) savior: GdprSavior
+		@Inject(GDPR_SAVIOR_TOKEN) savior: GdprSavior,
 	) {
 		this._managerStream = new GdprManagerStream(factory, savior);
 
 		this.manager$ = this.lens((manager) => manager.raw());
+		this.events$ = this.lens(manager => manager.events);
 	}
 
 	/**
@@ -51,7 +58,7 @@ export class NgxGdprGuardService {
 	}
 
 	/**
-	 * Get access to the {@link GdprSavior} wrapper
+	 * Get access to the underlying {@link GdprSavior} wrapper
 	 */
 	public getSavior(): GdprSavior {
 		return this._managerStream.gdprSavior;
@@ -95,7 +102,7 @@ export class NgxGdprGuardService {
 	public lens<T>(extractor: (manager: GdprManager) => T): Observable<T> {
 		return this._managerStream.controller$.pipe(
 			map(extractor),
-			distinctUntilChanged(deepEquals)
+			distinctUntilChanged(deepEquals),
 		);
 	}
 
@@ -122,7 +129,7 @@ export class NgxGdprGuardService {
 	 */
 	public nonNullGuardLensFor(guardName: string): Observable<GdprGuard> {
 		return this.guardLensFor(guardName).pipe(
-			filter((guard): guard is GdprGuard => guard !== null)
+			filter((guard): guard is GdprGuard => guard !== null),
 		);
 	}
 
@@ -133,7 +140,7 @@ export class NgxGdprGuardService {
 	 */
 	public nonNullGroupLensFor(groupName: string): Observable<GdprGuardGroup> {
 		return this.groupLensFor(groupName).pipe(
-			filter((guard): guard is GdprGuardGroup => guard !== null)
+			filter((guard): guard is GdprGuardGroup => guard !== null),
 		);
 	}
 }
