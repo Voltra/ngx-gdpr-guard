@@ -1,6 +1,6 @@
 # ngx-gdpr-guard
 
-<center><img src="https://github.com/Voltra/gdpr-guard/raw/master/ngx-gdpr-guard.png" alt="Logo" width="250px"/></center>
+<center><img src="https://github.com/Voltra/ngx-gdpr-guard/raw/master/ngx-gdpr-guard.png" alt="Logo" width="250px"/></center>
 
 Angular library to use [gdpr-guard](https://www.npmjs.com/package/gdpr-guard) as efficiently and easily as possible 
 
