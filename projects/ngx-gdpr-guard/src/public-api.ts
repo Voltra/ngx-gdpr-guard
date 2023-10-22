@@ -3,5 +3,4 @@
  */
 
 export * from './lib/ngx-gdpr-guard.service';
-export * from './lib/ngx-gdpr-guard.component';
 export * from './lib/ngx-gdpr-guard.module';

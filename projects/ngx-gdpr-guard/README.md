@@ -1,24 +1,55 @@
-# NgxGdprGuard
+# ngx-gdpr-guard
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
+<center><img src="https://github.com/Voltra/gdpr-guard/raw/master/ngx-gdpr-guard.png" alt="Logo" width="250px"/></center>
 
-## Code scaffolding
+Angular library to use [gdpr-guard](https://www.npmjs.com/package/gdpr-guard) as efficiently and easily as possible 
 
-Run `ng generate component component-name --project ngx-gdpr-guard` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-gdpr-guard`.
-> Note: Don't forget to add `--project ngx-gdpr-guard` or else it will be added to the default project in your `angular.json` file. 
+## Installation
 
-## Build
+```bash
+npm i -S ngx-gdpr-guard
+```
 
-Run `ng build ngx-gdpr-guard` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Setup
 
-## Publishing
+You'll need both a `GdprManagerFactory` and a `GdprSavior`.
 
-After building your library with `ng build ngx-gdpr-guard`, go to the dist folder `cd dist/ngx-gdpr-guard` and run `npm publish`.
+> NOTE: The recommended gdpr savior library is [`gdpr-guard-local`](https://www.npmjs.com/package/gdpr-guard-local) which uses local storage by default, but can be customized to use anything.
 
-## Running unit tests
+You can use a very basic `GdprManagerFactory` using the `GdprManagerBuilder` as follows:
 
-Run `ng test ngx-gdpr-guard` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```ts
+import { GdprManagerBuilder, GdprManagerFactory } from "gdpr-guard";
 
-## Further help
+const managerFactory: GdprManagerFactory = () => GdprManagerBuilder.make()
+	/* [...] */
+	.build();
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+There's an injection token for both the factory and the savior:
+
+```ts
+import { GDPR_MANAGER_FACTORY_TOKEN, GDPR_SAVIOR_TOKEN } from "ngx-gdpr-guard";
+
+const providers = [
+	{ provide: GDPR_MANAGER_FACTORY_TOKEN, /* [...] */ },
+	{ provide: GDPR_SAVIOR_TOKEN, /* [...] */ },
+];
+```
+
+With these providers in scope, you can inject the `NgxGdprGuardService`:
+
+```ts
+import { NgModule } from "@angular/core";
+import { NgxGdprGuardService } from "ngx-gdpr-guard";
+
+@NgModule({
+	declarations: [],
+	imports: [],
+	exports: [],
+})
+export class MyModule {
+	constructor(private ngxGdprGuard: NgxGdprGuardService) {
+	}
+}
+```
