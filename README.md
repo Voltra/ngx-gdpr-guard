@@ -1,27 +1,55 @@
-# /ngxGdprGuard/
+# ngx-gdpr-guard
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
+<center><img src="https://github.com/Voltra/gdpr-guard/raw/master/ngx-gdpr-guard.png" alt="Logo" width="250px"/></center>
 
-## Development server
+Angular library to use [gdpr-guard](https://www.npmjs.com/package/gdpr-guard) as efficiently and easily as possible
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Installation
 
-## Code scaffolding
+```bash
+npm i -S ngx-gdpr-guard
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Setup
 
-## Build
+You'll need both a `GdprManagerFactory` and a `GdprSavior`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+> NOTE: The recommended gdpr savior library is [`gdpr-guard-local`](https://www.npmjs.com/package/gdpr-guard-local) which uses local storage by default, but can be customized to use anything.
 
-## Running unit tests
+You can use a very basic `GdprManagerFactory` using the `GdprManagerBuilder` as follows:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```ts
+import { GdprManagerBuilder, GdprManagerFactory } from "gdpr-guard";
 
-## Running end-to-end tests
+const managerFactory: GdprManagerFactory = () => GdprManagerBuilder.make()
+	/* [...] */
+	.build();
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+There's an injection token for both the factory and the savior:
 
-## Further help
+```ts
+import { GDPR_MANAGER_FACTORY_TOKEN, GDPR_SAVIOR_TOKEN } from "ngx-gdpr-guard";
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+const providers = [
+	{ provide: GDPR_MANAGER_FACTORY_TOKEN, /* [...] */ },
+	{ provide: GDPR_SAVIOR_TOKEN, /* [...] */ },
+];
+```
+
+With these providers in scope, you can inject the `NgxGdprGuardService`:
+
+```ts
+import { NgModule } from "@angular/core";
+import { NgxGdprGuardService } from "ngx-gdpr-guard";
+
+@NgModule({
+	declarations: [],
+	imports: [],
+	exports: [],
+})
+export class MyModule {
+	constructor(private ngxGdprGuard: NgxGdprGuardService) {
+	}
+}
+```

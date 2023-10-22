@@ -25,7 +25,7 @@ export class SaviorWrapper extends GdprSaviorAdapter {
 	}
 
 	override exists(shouldUpdate = true): Promise<boolean> {
-		return this.exists(shouldUpdate);
+		return this.savior.exists(shouldUpdate);
 	}
 
 	override restore(shouldUpdate = true): Promise<GdprManager | null> {
