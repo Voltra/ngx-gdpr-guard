@@ -131,8 +131,8 @@ export class NgxGdprGuardService {
 	 * @param groupName - The name of the group in the manager's tree hierarchy
 	 * @warning The observable may never emit values
 	 */
-	public nonNullGroupLensFor(guardName: string): Observable<GdprGuardGroup> {
-		return this.groupLensFor(guardName).pipe(
+	public nonNullGroupLensFor(groupName: string): Observable<GdprGuardGroup> {
+		return this.groupLensFor(groupName).pipe(
 			filter((guard): guard is GdprGuardGroup => guard !== null)
 		);
 	}

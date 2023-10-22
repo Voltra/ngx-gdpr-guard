@@ -6,3 +6,5 @@ import { NgModule } from '@angular/core';
 	exports: [],
 })
 export class NgxGdprGuardModule {}
+
+export * from "./ngx-gdpr-guard.service";
