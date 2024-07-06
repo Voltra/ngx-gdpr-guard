@@ -45,4 +45,12 @@ export class SaviorWrapper extends GdprSaviorAdapter {
 	override storeIfNotExists(manager: GdprManagerRaw): Promise<boolean> {
 		return this.savior.storeIfNotExists(manager);
 	}
+
+	public override decorate(manager: GdprManager): GdprManager {
+		if (typeof this.savior.decorate !== "undefined") {
+			return this.savior.decorate(manager);
+		}
+
+		return super.decorate(manager);
+	}
 }
